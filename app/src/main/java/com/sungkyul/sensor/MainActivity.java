@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     /**
-     * 센서 핸들러 ( 김도윤 수정 테스트 )
+     * 센서 핸들러 ( 박원용 수정 테스트 )
      */
     protected SensorHandler mSensorHandler = null;
     TextView txtmode, txtdoo, txtX, txtY, txtZ, txtAlarm, txtTutleNectAlram;
