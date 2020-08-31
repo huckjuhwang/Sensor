@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#81C147"
+    >
+
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:src="@drawable/strecthing1"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textSize="35dp"
+        android:gravity="center"
+        android:text="위 아래 목 젖히기"
+        android:textColor="#FFFFFFFF"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="left"
+        android:textColor="#FFFFFFFF"
+        android:text="① 두 손을 모아 깍지를 끼고 목 뒤를 감싸주세요.
+        \n② 목을 천천히 뒤로 젖혀주세요.
+        \n③ 5~10초 정도 유지한 후 정면을 봐주세요.
+        \n④ 아래 방향으로 동일하게 진행해주세요."
+        />
+
+</LinearLayout>

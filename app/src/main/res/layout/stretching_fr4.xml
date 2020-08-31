@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#81C147"
+    >
+
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:src="@drawable/strecthing4"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textSize="35dp"
+        android:gravity="center"
+        android:text="좌우 고개 이완하기"
+        android:textColor="#FFFFFFFF"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="left"
+        android:textColor="#FFFFFFFF"
+        android:text="① 왼손은 쇄골에, 오른손은 바닥을 짚어 주세요.
+        \n② 고개를 최대한 왼쪽으로 천천히 돌려주세요.
+        \n③ 5~10초 정도 유지한 후 정면을 봐주세요.
+        \n④ 반대 쪽도 동일하게 진행해주세요."
+        />
+
+</LinearLayout>

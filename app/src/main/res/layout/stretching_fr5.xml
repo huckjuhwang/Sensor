@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#81C147"
+    >
+
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:src="@drawable/strecthing5"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textSize="35dp"
+        android:gravity="center"
+        android:text="목 근육 강화하기"
+        android:textColor="#FFFFFFFF"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="left"
+        android:textColor="#FFFFFFFF"
+        android:text="① 목과 허리를 바로 세워주세요.
+        \n② 손바닥을 포개 이마에 대주세요.
+        \n③ 고개가 살짝 뒤로 젖혀지도록 손바닥으로 이마를 눌러 주세요.
+        \n④ 10초간 자세를 유지해주세요."
+        />
+
+</LinearLayout>

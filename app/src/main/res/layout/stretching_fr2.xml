@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#81C147"
+    >
+
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:src="@drawable/strecthing2"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textSize="35dp"
+        android:gravity="center"
+        android:text="어깨 으쓱하기"
+        android:textColor="#FFFFFFFF"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="left"
+        android:textColor="#FFFFFFFF"
+        android:text="① 어깨를 귀 쪽으로 최대한 끌어올려주세요.
+        \n② 5~8초간 유지해주세요.
+        \n③ 숨을 내쉬며 천천히 어깨를 떨어트려주세요."
+        />
+
+</LinearLayout>

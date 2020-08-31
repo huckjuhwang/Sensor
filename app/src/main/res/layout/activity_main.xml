@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity ="center"
+        android:fillViewport="true"
+        android:layout_marginTop="0dp"
+        android:id="@+id/scrollView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="현재 모드 : "
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="30dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtmode"
+                    android:text=""
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="30dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="거북목 유무 : "
+                    android:layout_marginTop="10dp"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="10dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtAlarm"
+                    android:text=""
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="125dp"
+                android:orientation="horizontal"
+                >
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="60dp"
+                    android:foregroundGravity="center"
+                    android:background="@drawable/turtle"
+                    android:layout_marginBottom="10dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="50dp"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txtdoo"
+                        android:text="0°"
+                        android:textSize="40dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="설정 각도 : 40°"
+                        android:textSize="15dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="125dp"
+                android:orientation="horizontal"
+                >
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginLeft="60dp"
+                    android:foregroundGravity="center"
+                    android:background="@drawable/user"
+                    android:layout_marginBottom="10dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="50dp"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0cm"
+                        android:textSize="40dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="설정 거리 : 30cm"
+                        android:textSize="15dp"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_gravity="center_horizontal"
+                android:layout_width="250dp"
+                android:layout_marginTop="30dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <LinearLayout
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="300dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="80dp"
+                        android:layout_marginLeft="8dp"
+                        android:foregroundGravity="right"
+                        android:background="@drawable/horizontal"
+
+                        android:layout_marginBottom="10dp"
+                        android:id="@+id/Horizontal"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="00:00"
+                            />
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@drawable/success"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:text="00:00"
+                            />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@drawable/fail"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="300dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="right"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginBottom="25dp"
+                        android:background="@drawable/vertical"
+                        android:id="@+id/vertical"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="18dp"
+                            android:text="00:00"
+                            />
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@drawable/success"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="18dp"
+                            android:text="00:00"
+                            />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginLeft="5dp"
+                            android:background="@drawable/fail"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:visibility="invisible"
+                android:layout_marginTop="20dp"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:textAlignment="center"
+                android:id="@+id/txtTutleNectAlram"
+                android:background="#25000000"
+                android:textColor="#FFFFFF"
+                />
+
+
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0.3dp"
+                android:layout_marginTop="15dp"
+                android:background="#4682B4" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:gravity="bottom">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="케어가 시작되면 앱이 종료되도 측정을 하게됩니다."
+                        android:textSize="12dp"
+                        />
+
+                    <Button
+                        android:id="@+id/buttonStartService"
+                        android:layout_width="130dp"
+                        android:layout_height="match_parent"
+
+                        android:background="@drawable/button_background"
+                        android:text="측정 시작하기"
+                        android:textColor="#fff" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
+                    android:gravity="bottom">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:textSize="12dp"
+                        android:text="간단한 스트레칭을 통하여 목 건강을 지켜줍니다."/>
+
+                    <Button
+                        android:id="@+id/btnStretching"
+                        android:layout_width="130dp"
+                        android:layout_height="match_parent"
+                        android:height="10dp"
+                        android:background="@drawable/button_background"
+                        android:text="스트레칭 시작하기"
+                        android:textColor="#fff" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
