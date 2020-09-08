@@ -10,18 +10,23 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     /**
-     * 센서 핸들러 ( 박원용 수정 테스트 )
+     * 센서 핸들러 ( 김도윤 수정 테스트 )
      */
     protected SensorHandler mSensorHandler = null;
     TextView txtmode, txtdoo, txtX, txtY, txtZ, txtAlarm, txtTutleNectAlram;
     Button btnStartService, btnStopService, btnStretching;
     int angular = 0;
+
+    ImageView image;
 
     String Turtle_neck = "X";
     boolean start;
@@ -44,10 +49,12 @@ public class MainActivity extends AppCompatActivity {
         txtmode = findViewById(R.id.txtmode);
         txtAlarm = findViewById(R.id.txtAlarm);
         btnStartService = findViewById(R.id.buttonStartService);
-/*        btnStopService = findViewById(R.id.buttonStopService);*/
+        /*        btnStopService = findViewById(R.id.buttonStopService);*/
 
         txtTutleNectAlram = findViewById(R.id.txtTutleNectAlram);
         btnStretching = findViewById(R.id.btnStretching);
+
+        image = findViewById(R.id.turtle1);
 
         //진동사용하기
         vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
@@ -141,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                                 booltime = false;
                                 txtTutleNectAlram.setVisibility(View.INVISIBLE);
                             }
-
+                            testRotation(angular +1);
                         }
 
                     } else if (orientationMode.equals("정방향 가로모드")
@@ -218,7 +225,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.i(this.getClass().getName(), "btnStretching 클릭");
-
                 Intent intent = new Intent(MainActivity.this, StretchingActivity.class);
 
                 startActivity(intent);
@@ -249,7 +255,18 @@ public class MainActivity extends AppCompatActivity {
         mSensorHandler.onDestroy();
     }
 
-
+    public void testRotation(int i) {
+        RotateAnimation ra = new RotateAnimation(
+                angular,
+                i,
+                Animation.RELATIVE_TO_SELF, 0.5f,
+                Animation.RELATIVE_TO_SELF, 0.5f
+        );
+        ra.setDuration(250);
+        ra.setFillAfter(true);
+        image.startAnimation(ra);
+        angular = i;
+    }
 
     public void startService() {
         Intent serviceIntent = new Intent(getApplicationContext(), ForegroundService.class);

@@ -70,25 +70,35 @@
                     android:layout_marginLeft="10dp"
                     />
             </LinearLayout>
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="125dp"
-                android:orientation="horizontal"
                 >
 
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_marginLeft="60dp"
+                    android:layout_width="40dp"
+                    android:layout_height="78dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginLeft="38dp"
+                    android:id="@+id/turtle1"
+                    android:rotation="-70"
                     android:foregroundGravity="center"
-                    android:background="@drawable/turtle"
-                    android:layout_marginBottom="10dp" />
+                    android:background="@drawable/turtle1"
+                    />
+
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="50dp"
+                    android:foregroundGravity="center"
+                    android:background="@drawable/turtle2" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
-                    android:layout_marginLeft="50dp"
+                    android:layout_marginLeft="210dp"
                     android:orientation="vertical"
                     >
 
@@ -107,7 +117,7 @@
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </FrameLayout>
 
 
             <LinearLayout
