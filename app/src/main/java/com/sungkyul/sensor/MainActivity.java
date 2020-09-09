@@ -17,6 +17,7 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,8 +32,9 @@ public class MainActivity extends AppCompatActivity {
      * 센서 핸들러 ( 김도윤 수정 테스트 )
      */
     protected SensorHandler mSensorHandler = null;
-    TextView txtmode, txtdoo, txtX, txtY, txtZ, txtAlarm, txtTutleNectAlram;
+    TextView txtmode, txtdoo, txtX, txtY, txtZ, txtAlarm, txtTutleNectAlram, txtFace;
     Button btnStartService, btnStopService, btnStretching;
+
     int angular = 0;
 
     ImageView image;
@@ -54,43 +56,12 @@ public class MainActivity extends AppCompatActivity {
      * 김도윤 FaceTracker 코드 삽입
      * 2020.09.09
      */
-    ConstraintLayout background;
+    LinearLayout background;
     CameraSource cameraSource;
 
     boolean TF = false;
 
 
-    private void init(){
-        background = findViewById(R.id.background);
-        initCameraSource();
-    }
-
-    //카메라 얼굴 감지 소스
-    private void initCameraSource() {
-        FaceDetector detector = new FaceDetector.Builder(this)
-                .setTrackingEnabled(true)
-                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
-                .setMode(FaceDetector.FAST_MODE)
-                .build();
-        detector.setProcessor(new MultiProcessor.Builder(new FaceTrackerDaemon(MainActivity.this)).build());
-
-        cameraSource = new CameraSource.Builder(this, detector)
-                .setRequestedPreviewSize(1024, 768)
-                .setFacing(CameraSource.CAMERA_FACING_FRONT)
-                .setRequestedFps(30.0f)
-                .build();
-
-        try {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            cameraSource.start();
-        }
-        catch (IOException e) {
-            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-    }
 
 
     @Override
@@ -110,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         start=false;
+        txtFace = findViewById(R.id.txtFace);
         txtdoo = findViewById(R.id.txtdoo);
         txtmode = findViewById(R.id.txtmode);
         txtAlarm = findViewById(R.id.txtAlarm);
@@ -402,8 +374,9 @@ if (mSensorHandler != null) {
                 @Override
                 public void run() {
                     if(!TF) {
-                        Log.i("얼굴 ", "인식됌");
-                        Toast.makeText(MainActivity.this, "인식되었습니다.", Toast.LENGTH_SHORT).show();
+                        Log.e("얼굴 ", "인식됌");
+                        txtFace.setText("얼굴 인식 유무 : O");
+
                         TF=true;
                     }
                 }
@@ -418,8 +391,8 @@ if (mSensorHandler != null) {
                 @Override
                 public void run() {
                     if(TF) {
-                        Log.i("얼굴 ", "인식안됌");
-                        Toast.makeText(MainActivity.this, "인식 안되었습니다.", Toast.LENGTH_SHORT).show();
+                        Log.e("얼굴 ", "인식안됌");
+                        txtFace.setText("얼굴 인식 유무 : X");
                         TF=false;
                     }
 
@@ -427,7 +400,37 @@ if (mSensorHandler != null) {
             });
         }
     }
+    private void init(){
+        background = findViewById(R.id.background);
+        initCameraSource();
+    }
 
+    //카메라 얼굴 감지 소스
+    private void initCameraSource() {
+        FaceDetector detector = new FaceDetector.Builder(this)
+                .setTrackingEnabled(true)
+                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
+                .setMode(FaceDetector.FAST_MODE)
+                .build();
+        detector.setProcessor(new MultiProcessor.Builder(new FaceTrackerDaemon(MainActivity.this)).build());
+
+        cameraSource = new CameraSource.Builder(this, detector)
+                .setRequestedPreviewSize(1024, 768)
+                .setFacing(CameraSource.CAMERA_FACING_FRONT)
+                .setRequestedFps(30.0f)
+                .build();
+
+        try {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            cameraSource.start();
+        }
+        catch (IOException e) {
+            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
 
 
 }
