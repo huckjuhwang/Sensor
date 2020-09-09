@@ -1,11 +1,14 @@
 package com.sungkyul.sensor;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.util.Log;
@@ -16,6 +19,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.MultiProcessor;
+import com.google.android.gms.vision.face.FaceDetector;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     /**
@@ -39,11 +48,67 @@ public class MainActivity extends AppCompatActivity {
 
     Intent serviceIntent;
 
+
+    /**
+     *
+     * 김도윤 FaceTracker 코드 삽입
+     * 2020.09.09
+     */
+    ConstraintLayout background;
+    CameraSource cameraSource;
+
+    boolean TF = false;
+
+
+    private void init(){
+        background = findViewById(R.id.background);
+        initCameraSource();
+    }
+
+    //카메라 얼굴 감지 소스
+    private void initCameraSource() {
+        FaceDetector detector = new FaceDetector.Builder(this)
+                .setTrackingEnabled(true)
+                .setClassificationType(FaceDetector.ALL_CLASSIFICATIONS)
+                .setMode(FaceDetector.FAST_MODE)
+                .build();
+        detector.setProcessor(new MultiProcessor.Builder(new FaceTrackerDaemon(MainActivity.this)).build());
+
+        cameraSource = new CameraSource.Builder(this, detector)
+                .setRequestedPreviewSize(1024, 768)
+                .setFacing(CameraSource.CAMERA_FACING_FRONT)
+                .setRequestedFps(30.0f)
+                .build();
+
+        try {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            cameraSource.start();
+        }
+        catch (IOException e) {
+            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setTitle("TurtleNeck");
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+            Toast.makeText(this, "Permission not granted!\n Grant permission and restart app", Toast.LENGTH_SHORT).show();
+        }else{
+            init();
+        }
+
+
+
+
         start=false;
         txtdoo = findViewById(R.id.txtdoo);
         txtmode = findViewById(R.id.txtmode);
@@ -235,22 +300,49 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-/*        if (mSensorHandler != null) {
+/*           백그라운드 재생 나중에 수정해야댐
+if (mSensorHandler != null) {
             mSensorHandler.onPause();
         }*/
+
+        if (cameraSource!=null) {
+            cameraSource.stop();
+        }
+        execution();
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-/*        if (mSensorHandler != null) {
+/*       백그라운드 재생 나중에 수정해야댐
+if (mSensorHandler != null) {
             mSensorHandler.onResume();
         }*/
+
+        if (cameraSource != null) {
+            try {
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                cameraSource.start();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if (cameraSource!=null) {
+            cameraSource.release();
+        }
+
+
         stopService();
         mSensorHandler.onDestroy();
     }
@@ -279,5 +371,63 @@ public class MainActivity extends AppCompatActivity {
         Log.e("stopService() :" , "in .. stop");
         stopService(serviceIntent);
     }
+
+
+    //화면 업데이트 => 김도윤코드
+    public void updateMainView(Condition condition){
+        switch (condition){
+            // 얼굴인식
+            case FACE_FOUND:
+                facefound();
+                break;
+            // 얼굴인식 X
+            case FACE_NOT_FOUND:
+                facenofound();
+                break;
+            default:
+                execution();
+        }
+    }
+
+    // 처음 화면 실행할때 회색화면
+    private void execution() {
+        if (background != null)
+            background.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+    }
+
+    // 얼굴 인식 했을때
+    private void facefound() {
+        if(background != null){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(!TF) {
+                        Log.i("얼굴 ", "인식됌");
+                        Toast.makeText(MainActivity.this, "인식되었습니다.", Toast.LENGTH_SHORT).show();
+                        TF=true;
+                    }
+                }
+            });
+        }
+    }
+
+    // 얼굴 인식 못했을때
+    private void facenofound() {
+        if(background != null){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(TF) {
+                        Log.i("얼굴 ", "인식안됌");
+                        Toast.makeText(MainActivity.this, "인식 안되었습니다.", Toast.LENGTH_SHORT).show();
+                        TF=false;
+                    }
+
+                }
+            });
+        }
+    }
+
+
 
 }
