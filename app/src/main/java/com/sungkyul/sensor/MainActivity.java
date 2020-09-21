@@ -12,6 +12,8 @@ import android.content.pm.PackageManager;
 import android.graphics.PointF;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
@@ -38,30 +40,24 @@ public class MainActivity extends AppCompatActivity {
      * 센서 핸들러 ( 김도윤 수정 테스트 )
      */
     protected SensorHandler mSensorHandler = null;
-    TextView txtmode, txtdoo, txtdistance, txtX, txtY, txtZ, txtAlarm, txtTutleNectAlram, txtFace;
-    Button btnStartService, btnStopService, btnStretching;
-
+    TextView txtdoo, txtdistance, txtAlarm, txtTutleNectAlram, txtDistanceAlram, txtFace;
+    Button btnStartService, btnStretching;
+    ImageView imgFace, imgHorizontal, imgVertical;
     int angular = 0;
 
     ImageView image;
 
     String Turtle_neck = "X";
     boolean start;
-    boolean isToast = false;
     boolean booltime = false;
-    long starttime, end, time;
+    long turtleStartTime, turtleEnd, turtleTime;
+
+    long distanceStartTime, distanceEnd, distanceTime;
 
     Toast toast;
     Vibrator vibrator;
 
-    Intent serviceIntent;
 
-
-    /**
-     *
-     * 김도윤 FaceTracker 코드 삽입
-     * 2020.09.09
-     */
     LinearLayout background;
     CameraSource cameraSource;
 
@@ -69,10 +65,8 @@ public class MainActivity extends AppCompatActivity {
 
     static final int IMAGE_WIDTH = 1024;
     static final int IMAGE_HEIGHT = 1024;
-
     static final int RIGHT_EYE = 0;
     static final int LEFT_EYE = 1;
-
     static final int AVERAGE_EYE_DISTANCE = 63; // in mm
 
     TextView textView;
@@ -81,6 +75,108 @@ public class MainActivity extends AppCompatActivity {
     float F = 1f;           //focal length
     float sensorX, sensorY; //camera sensor dimensions
     float angleX, angleY;
+
+
+    boolean distanceBoolTime = false;
+    Toast disToast;
+
+    // 거리위반 유무
+    int distanceTF = 0;
+
+    private void DistanceViolate(final int distance){
+        Handler mHandler = new Handler(Looper.getMainLooper());
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                txtdistance.setText( "" + distance + "cm");
+            }
+        }, 0);
+
+        if(distance>30){
+            distanceTF = 0;
+            distanceBoolTime = false;
+/*            txtDistanceAlram.setVisibility(View.GONE);*/
+        }
+
+        if(distance<=30 && distanceTF==0){
+            Log.e("위반위반", distance+"----");
+            distanceTF = 1;
+            distanceStartTime = System.currentTimeMillis();
+            distanceBoolTime = true;
+        }
+        else if(distanceBoolTime == true && distanceTF==1) {
+            Log.e("위반true", distance+"----");
+            distanceEnd = System.currentTimeMillis();
+            distanceTime = 5 - (distanceEnd-distanceStartTime)/1000 ;
+
+            if(distanceTime <= 5 && distanceTime >= 0){
+/*                txtDistanceAlram.setVisibility(View.VISIBLE);*/
+                txtDistanceAlram.setText("휴대폰을 멀리봐주세요. " + distanceTime + "초뒤 알람 발생");
+                //토스트 메세지
+                if(distanceTime == 0) {
+
+                    mHandler = new Handler(Looper.getMainLooper());
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(MainActivity.this, "탈모됩니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }, 0);
+
+
+                    vibrator.vibrate(500);
+                    distanceTF=0;
+                    distanceBoolTime = false;
+                }
+            }
+        }
+
+
+    }
+
+
+    private void TuttleViolate(float axis, float axisZ){
+        if (axis < 0) {
+            angular = 0;
+            Turtle_neck = "X";
+            booltime = false;
+        } else {
+            angular = (int)(axis * 9);
+
+            if ((angular < 50) && (axisZ > 0))
+            {
+                if(booltime == false && Turtle_neck.equals("O"))
+                {
+                    booltime = true;
+                    turtleStartTime = System.currentTimeMillis();
+                }
+                else if(booltime == true && Turtle_neck.equals("O"))
+                {
+                    turtleEnd = System.currentTimeMillis();
+                    turtleTime = 5 - (turtleEnd-turtleStartTime)/1000 ;
+                    if(turtleTime <= 5 && turtleTime >= 0){
+/*                        txtTutleNectAlram.setVisibility(View.VISIBLE);*/
+                        txtTutleNectAlram.setText("목을 세우세요. " + turtleTime + "초뒤 알람 발생");
+                        //토스트 메세지
+                        if(turtleTime == 0)
+                        {
+                            Toast.makeText(MainActivity.this, "고개를 들라!!!", Toast.LENGTH_SHORT).show();
+                            vibrator.vibrate(500);
+                            booltime = false;
+                        }
+                    }else{
+    /*                    txtTutleNectAlram.setVisibility(View.INVISIBLE);*/
+                        booltime = false;
+                    }
+                }
+                Turtle_neck = "O";
+            } else {
+                Turtle_neck = "X";
+                booltime = false;
+/*                txtTutleNectAlram.setVisibility(View.INVISIBLE);*/
+            }
+        }
+    }
 
 
     @Override
@@ -108,18 +204,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-
+        imgHorizontal = findViewById(R.id.Horizontal);
+        imgVertical = findViewById(R.id.vertical);
+        imgFace = findViewById(R.id.imgFace);
         start=false;
         txtFace = findViewById(R.id.txtFace);
         txtdoo = findViewById(R.id.txtdoo);
         txtdistance = findViewById(R.id.txtdistance);
-        txtmode = findViewById(R.id.txtmode);
         txtAlarm = findViewById(R.id.txtAlarm);
         btnStartService = findViewById(R.id.buttonStartService);
         /*        btnStopService = findViewById(R.id.buttonStopService);*/
 
         txtTutleNectAlram = findViewById(R.id.txtTutleNectAlram);
+        txtDistanceAlram = findViewById(R.id.txtDistanceAlram);
         btnStretching = findViewById(R.id.btnStretching);
 
         image = findViewById(R.id.turtle1);
@@ -141,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
                     start = false;
                     btnStartService.setBackgroundResource(R.drawable.button_background);
                     btnStartService.setText("서비스 시작하기");
-                    txtTutleNectAlram.setVisibility(View.INVISIBLE);
+/*                    txtTutleNectAlram.setVisibility(View.INVISIBLE);*/
                     stopService();
 
                 }
@@ -158,133 +255,31 @@ public class MainActivity extends AppCompatActivity {
                 // orientationMode 값은 현재 유지해주어야 하는 회전 모드 문자열 이름이다.
                 // 여기에 원하는 처리 로직을 작성하면 된다.
 
-
                 //TF가 True면 시작했을때 false는 Stop상태.
                 if(start) {
-                    txtmode.setText(orientationMode);
-
+/*                    txtmode.setText(orientationMode);*/
                     if (orientationMode.equals("정방향 세로모드")
                             || orientationMode.equals("역방향 세로모드")) {
-
-
-                        //정방향 세로모드와 역방향 세로모드를 했을땐 axisY의 값으로만 보면된다.
-                        //axisy<0 이면 각도를 O으로 고정시켜주고 터틀넥이 "X"
-                        if (axisY < 0) {
-                            angular = 0;
-                            Turtle_neck = "X";
-                            booltime = false;
-                        } else {
-                            angular = (int)(axisY * 9);
-                            // 각도가 50이상이면서 Z각도가 양수일때만 거북목이라고 친다.
-                            if (angular < 50 && (axisZ > 0))
-                            {
-                                if(booltime == false && Turtle_neck.equals("O"))    //거북목이면서(O) 시간측정 시작안할때 ==> false
-                                {
-                                    booltime = true;
-                                    starttime = System.currentTimeMillis();
-                                }
-                                else if(booltime == true && Turtle_neck.equals("O"))
-                                {
-                                    end = System.currentTimeMillis();
-                                    time = 5 - (end-starttime)/1000 ;
-                                    if(time <= 5 && time >= 0){
-                                        txtTutleNectAlram.setVisibility(View.VISIBLE);
-                                        txtTutleNectAlram.setText("목을 세우세요. " + time + "초뒤 알람 발생");
-                                        //토스트 메세지
-
-
-                                        if(time == 3){
-                                            isToast = false;
-                                        }
-
-                                        if(time == 0 && !isToast){
-
-                                            toast = Toast.makeText(MainActivity.this, "고개를 들라!!!", Toast.LENGTH_SHORT);
-                                            toast.show();
-                                            isToast = true;
-                                            //0.5초를 진동하겠다.
-                                            vibrator.vibrate(500);
-                                        }
-                                    }else{
-                                        txtTutleNectAlram.setVisibility(View.INVISIBLE);
-                                        booltime = false;
-                                    }
-                                }
-                                Turtle_neck = "O";
-                            } else {
-                                Turtle_neck = "X";
-                                booltime = false;
-                                txtTutleNectAlram.setVisibility(View.INVISIBLE);
-                            }
-                            testRotation(angular +1);
-                        }
+                        // y 각도 z각도
+                        TuttleViolate(axisY, axisZ);
+                        imgHorizontal.setImageResource(R.drawable.onhorizontal);
+                        imgVertical.setImageResource(R.drawable.vertical);
 
                     } else if (orientationMode.equals("정방향 가로모드")
                             || orientationMode.equals("역방향 가로모드")) {
+                        // x 각도 z도
+                        TuttleViolate(axisX*-1, axisZ);
 
-                        if(toast == null) {
-                            isToast = false;
-                        }
-
-
-                        if (axisX < 0) {
-                            angular = 0;
-                            Turtle_neck = "X";
-                            booltime = false;
-                        } else {
-                            angular = (int)(axisX * 9);
-
-                            if ((angular < 50) && (axisZ > 0))
-                            {
-                                if(booltime == false && Turtle_neck.equals("O"))
-                                {
-                                    booltime = true;
-                                    starttime = System.currentTimeMillis();
-                                }
-                                else if(booltime == true && Turtle_neck.equals("O"))
-                                {
-                                    end = System.currentTimeMillis();
-                                    time = 5 - (end-starttime)/1000 ;
-                                    if(time <= 5 && time >= 0){
-                                        txtTutleNectAlram.setVisibility(View.VISIBLE);
-                                        txtTutleNectAlram.setText("목을 세우세요. " + time + "초뒤 알람 발생");
-
-                                        if(time == 3){
-                                            isToast = false;
-                                        }
-
-                                        //토스트 메세지
-                                        if(time == 0 && !isToast)
-                                        {
-                                            toast = Toast.makeText(MainActivity.this, "고개를 들라!!!", Toast.LENGTH_SHORT);
-                                            toast.show();
-                                            isToast = true;
-                                            //0.5초를 진동하겠다.
-                                            vibrator.vibrate(500);
-                                        }
-                                    }else{
-                                        txtTutleNectAlram.setVisibility(View.INVISIBLE);
-                                        booltime = false;
-                                    }
-                                }
-                                Turtle_neck = "O";
-                            } else {
-                                Turtle_neck = "X";
-                                booltime = false;
-//                                txtAlarm.setText(Turtle_neck);
-                                txtTutleNectAlram.setVisibility(View.INVISIBLE);
-                            }
-
-
-                        }
+                        imgHorizontal.setImageResource(R.drawable.horizontal);
+                        imgVertical.setImageResource(R.drawable.onvertical);
                     }
 
                     txtdoo.setText(angular + "도");
                     txtAlarm.setText(Turtle_neck);
+                    testRotation(angular +1);
 
-//                    startService(); 각도 잴때마다 진동울린 ㄴ 거라서 주석해놈
+//                    startService(); 각도 잴때마다 진동울린거라서 주석해놈
                 }
-
 
             }
         });
@@ -379,10 +374,12 @@ if (mSensorHandler != null) {
             // 얼굴인식
             case FACE_FOUND:
                 facefound();
+                imgFace.setImageResource(R.drawable.success);
                 break;
             // 얼굴인식 X
             case FACE_NOT_FOUND:
                 facenofound();
+                imgFace.setImageResource(R.drawable.fail);
                 break;
             default:
                 execution();
@@ -403,7 +400,7 @@ if (mSensorHandler != null) {
                 public void run() {
                     if(!TF) {
                         Log.e("얼굴 ", "인식됌");
-                        txtFace.setText("얼굴 인식 유무 : O");
+                        txtFace.setText("얼굴 인식 : ");
 
                         TF=true;
                     }
@@ -420,7 +417,7 @@ if (mSensorHandler != null) {
                 public void run() {
                     if(TF) {
                         Log.e("얼굴 ", "인식안됌");
-                        txtFace.setText("얼굴 인식 유무 : X");
+                        txtFace.setText("얼굴 인식 : ");
                         TF=false;
                     }
 
@@ -503,7 +500,8 @@ if (mSensorHandler != null) {
                     distance = F * (AVERAGE_EYE_DISTANCE / sensorY) * (IMAGE_HEIGHT / deltaY);
                 }
 
-                txtdistance.setText( "" +(int) distance / 10 + "cm");
+                int Intdistance = (int)distance/10;
+                DistanceViolate(Intdistance);
                 updateMainView(Condition.FACE_FOUND);
             }
         }

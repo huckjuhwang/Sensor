@@ -29,33 +29,22 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="얼굴인식 유무 : "
+                    android:text="얼굴인식 : "
                     android:id="@+id/txtFace"
                     android:textSize="20dp"
                     android:textStyle="bold"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="30dp" />
 
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="30dp"
+                    android:id="@+id/imgFace"
+                    android:background="@drawable/fail"/>
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="현재 모드 : "
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="30dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/txtmode"
-                    android:text=""
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="30dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -84,6 +73,14 @@
                     android:layout_marginLeft="10dp"
                     />
             </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0.3dp"
+                android:layout_marginTop="15dp"
+                android:background="#4682B4" />
+
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="125dp"
@@ -142,11 +139,11 @@
 
                 <ImageView
                     android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_height="101dp"
                     android:layout_marginLeft="60dp"
-                    android:foregroundGravity="center"
+                    android:layout_marginBottom="10dp"
                     android:background="@drawable/user"
-                    android:layout_marginBottom="10dp" />
+                    android:foregroundGravity="center" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -213,8 +210,8 @@
                             android:text="00:00"
                             />
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="40dp"
+                            android:layout_height="30dp"
                             android:layout_marginLeft="5dp"
                             android:background="@drawable/success"/>
                     </LinearLayout>
@@ -232,8 +229,8 @@
                             />
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="40dp"
+                            android:layout_height="30dp"
                             android:layout_marginLeft="5dp"
                             android:background="@drawable/fail"/>
                     </LinearLayout>
@@ -250,7 +247,8 @@
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="50dp"
-                        android:layout_gravity="right"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginTop="15dp"
                         android:layout_marginBottom="25dp"
                         android:background="@drawable/vertical"
@@ -259,7 +257,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="40dp"
+                        android:layout_marginLeft="30dp"
                         android:orientation="horizontal"
                         >
                         <TextView
@@ -269,8 +267,8 @@
                             android:text="00:00"
                             />
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="40dp"
+                            android:layout_height="30dp"
                             android:layout_marginLeft="5dp"
                             android:background="@drawable/success"/>
                     </LinearLayout>
@@ -278,19 +276,19 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="40dp"
+                        android:layout_marginLeft="30dp"
                         android:orientation="horizontal"
                         >
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="18dp"
-                            android:text="00:00"
-                            />
+                            android:text="00:00" />
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="40dp"
+                            android:layout_height="30dp"
                             android:layout_marginLeft="5dp"
                             android:background="@drawable/fail"/>
                     </LinearLayout>
@@ -305,13 +303,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:visibility="invisible"
+                android:visibility="visible"
                 android:layout_marginTop="20dp"
                 android:textSize="20dp"
                 android:textStyle="bold"
                 android:padding="10dp"
                 android:textAlignment="center"
                 android:id="@+id/txtTutleNectAlram"
+                android:background="#25000000"
+                android:textColor="#FFFFFF"
+                />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:visibility="visible"
+                android:layout_marginTop="20dp"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:textAlignment="center"
+                android:id="@+id/txtDistanceAlram"
                 android:background="#25000000"
                 android:textColor="#FFFFFF"
                 />
