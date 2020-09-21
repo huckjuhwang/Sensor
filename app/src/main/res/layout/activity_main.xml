@@ -159,8 +159,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:id="@+id/txtdistance"
                         android:text="0cm"
-                        android:textSize="40dp"/>
+                        android:textSize="40dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
