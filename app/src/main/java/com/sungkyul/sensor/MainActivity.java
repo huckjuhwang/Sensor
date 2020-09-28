@@ -4,8 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.IntentCompat;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -36,19 +41,21 @@ import com.google.android.gms.vision.face.LargestFaceFocusingProcessor;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
+
     /**
      * 센서 핸들러 ( 김도윤 수정 테스트 )
      */
     protected SensorHandler mSensorHandler = null;
-    TextView txtdoo, txtdistance, txtAlarm, txtTutleNectAlram, txtDistanceAlram, txtFace;
+    TextView txtdoo, txtdistance,  txtTutleNectAlram, txtDistanceAlram, txtFace;
     Button btnStartService, btnStretching;
     ImageView imgFace, imgHorizontal, imgVertical;
     int angular = 0;
 
+    static boolean restart = true;
     ImageView image;
 
     String Turtle_neck = "X";
-    boolean start;
+    boolean start = false;
     boolean booltime = false;
     long turtleStartTime, turtleEnd, turtleTime;
 
@@ -83,19 +90,39 @@ public class MainActivity extends AppCompatActivity {
     // 거리위반 유무
     int distanceTF = 0;
 
+    public static void triggerRebirth(Context context, Intent nextIntent) {
+        Intent intent = new Intent(context, Activity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(Intent.ACTION_PACKAGE_RESTARTED, nextIntent);
+        context.startActivity(intent);
+        if (context instanceof Activity) {
+            ((Activity) context).finish();
+        }
+        Runtime.getRuntime().exit(0);
+    }
+
     private void DistanceViolate(final int distance){
         Handler mHandler = new Handler(Looper.getMainLooper());
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                txtdistance.setText( "" + distance + "cm");
+
+                if(distance > 30){
+                    txtDistanceAlram.setBackgroundResource(android.R.color.white);
+                }else{
+                    txtDistanceAlram.setBackgroundResource(android.R.color.darker_gray);
+                }
+                if(distance >= 90){
+                    txtdistance.setText("90cm");
+                }else{
+                    txtdistance.setText( "" + distance + "cm");
+                }
             }
         }, 0);
 
         if(distance>30){
             distanceTF = 0;
             distanceBoolTime = false;
-/*            txtDistanceAlram.setVisibility(View.GONE);*/
         }
 
         if(distance<=30 && distanceTF==0){
@@ -111,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
             if(distanceTime <= 5 && distanceTime >= 0){
 /*                txtDistanceAlram.setVisibility(View.VISIBLE);*/
+                txtDistanceAlram.setBackgroundResource(android.R.color.darker_gray);
                 txtDistanceAlram.setText("휴대폰을 멀리봐주세요. " + distanceTime + "초뒤 알람 발생");
                 //토스트 메세지
                 if(distanceTime == 0) {
@@ -136,6 +164,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void TuttleViolate(float axis, float axisZ){
+
+        if(angular > 40){
+            txtTutleNectAlram.setBackgroundResource(android.R.color.white);
+        }
         if (axis < 0) {
             angular = 0;
             Turtle_neck = "X";
@@ -143,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             angular = (int)(axis * 9);
 
-            if ((angular < 50) && (axisZ > 0))
+            if ((angular < 40) && (axisZ > 0))
             {
                 if(booltime == false && Turtle_neck.equals("O"))
                 {
@@ -155,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
                     turtleEnd = System.currentTimeMillis();
                     turtleTime = 5 - (turtleEnd-turtleStartTime)/1000 ;
                     if(turtleTime <= 5 && turtleTime >= 0){
-/*                        txtTutleNectAlram.setVisibility(View.VISIBLE);*/
+                        txtTutleNectAlram.setBackgroundResource(android.R.color.darker_gray);
                         txtTutleNectAlram.setText("목을 세우세요. " + turtleTime + "초뒤 알람 발생");
                         //토스트 메세지
                         if(turtleTime == 0)
@@ -176,7 +208,11 @@ public class MainActivity extends AppCompatActivity {
 /*                txtTutleNectAlram.setVisibility(View.INVISIBLE);*/
             }
         }
+
+        txtdoo.setText(angular + "°");
+
     }
+
 
 
     @Override
@@ -184,12 +220,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = getApplicationContext();
-        setTitle("TurtleNeck");
+        setTitle("올스생");
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
             Toast.makeText(this, "Permission not granted!\n Grant permission and restart app", Toast.LENGTH_SHORT).show();
+
+
+
+
         }else{
+
             Camera camera = frontCam();
             Camera.Parameters campar = camera.getParameters();
             F = campar.getFocalLength();
@@ -207,11 +248,9 @@ public class MainActivity extends AppCompatActivity {
         imgHorizontal = findViewById(R.id.Horizontal);
         imgVertical = findViewById(R.id.vertical);
         imgFace = findViewById(R.id.imgFace);
-        start=false;
         txtFace = findViewById(R.id.txtFace);
         txtdoo = findViewById(R.id.txtdoo);
         txtdistance = findViewById(R.id.txtdistance);
-        txtAlarm = findViewById(R.id.txtAlarm);
         btnStartService = findViewById(R.id.buttonStartService);
         /*        btnStopService = findViewById(R.id.buttonStopService);*/
 
@@ -256,7 +295,7 @@ public class MainActivity extends AppCompatActivity {
                 // 여기에 원하는 처리 로직을 작성하면 된다.
 
                 //TF가 True면 시작했을때 false는 Stop상태.
-                if(start) {
+                if(start && TF) {
 /*                    txtmode.setText(orientationMode);*/
                     if (orientationMode.equals("정방향 세로모드")
                             || orientationMode.equals("역방향 세로모드")) {
@@ -268,17 +307,18 @@ public class MainActivity extends AppCompatActivity {
                     } else if (orientationMode.equals("정방향 가로모드")
                             || orientationMode.equals("역방향 가로모드")) {
                         // x 각도 z도
-                        TuttleViolate(axisX*-1, axisZ);
+                        TuttleViolate(axisX, axisZ);
 
                         imgHorizontal.setImageResource(R.drawable.horizontal);
                         imgVertical.setImageResource(R.drawable.onvertical);
                     }
 
-                    txtdoo.setText(angular + "도");
-                    txtAlarm.setText(Turtle_neck);
-                    testRotation(angular +1);
 
-//                    startService(); 각도 잴때마다 진동울린거라서 주석해놈
+                    testRotation(angular +1);
+                }else{
+                    txtTutleNectAlram.setBackgroundResource(android.R.color.white);
+                    txtDistanceAlram.setBackgroundResource(android.R.color.white);
+
                 }
 
             }
@@ -358,7 +398,7 @@ if (mSensorHandler != null) {
     public void startService() {
         Intent serviceIntent = new Intent(getApplicationContext(), ForegroundService.class);
         Log.e("StartService() :" , "in .. start");
-        serviceIntent.putExtra("inputExtra", "현재 각도 : " + angular + "°" + "\n 거북목 : " + Turtle_neck );
+        serviceIntent.putExtra("inputExtra", "백그라운드 진행중입니다.");
         ContextCompat.startForegroundService(this, serviceIntent);
     }
     public void stopService() {
